@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <form id="loginForm" action="http://127.0.0.1:5003/auth" method="post">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email_id" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="passkey" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var form = event.target;
+            var formData = new FormData(form);
+            var jsonData = {};
+            
+            formData.forEach(function(value, key){
+                jsonData[key] = value;
+            });
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Login failed');
+            })
+            .then(data => {
+                console.log('Login data:', data);
+                alert('Login successful!'); // You can customize this alert
+                // Optionally, redirect to another page
+                // window.location.href = '/dashboard';
+            })
+            .catch(error => {
+                console.error('Login error:', error);
+                alert('Login failed. Please check your credentials.');
+            });
+        });
+    </script>
+</body>
+</html>
